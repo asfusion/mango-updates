@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin id="andreas07" name="Andreas 07" version="1.2" provider-name="AsFusion" lastModified="2007-09-08">
+	<description>A simple skin based on Andreas Viklund's design</description>
+	<url></url>
+	<author>AsFusion</author>
+	<authorUrl>http://www.asfusion.com</authorUrl>
+	<designAuthor>Andreas Viklund</designAuthor>
+	<designAuthorUrl>http://andreasviklund.com/</designAuthorUrl>
+	<thumbnail>assets/images/skin_thumbnail.png</thumbnail>
+	<preview></preview>
+	<requiresVersion match="greaterOrEqual">0.2</requiresVersion>
+	<adminEditorCss>assets/styles/adminEditor.css</adminEditorCss>
+	<license>Creative Commons Attribution v2.5</license>
+	<pageTemplates></pageTemplates>
+</skin>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.blueinstant.colorcode" name="Color Coding" version="1.0" provider-name="BlueInstant" class="colorcoding.Colorer">
+<description><![CDATA[
+Adds color coding to blocks marked as &lt;code&gt; and adds formatting to comments.
+]]>
+</description>
+ <!--  <runtime>
+      <library name="library.jar"></library>
+   </runtime>
+   <requires>
+     <import plugin="" version="1" match="greaterOrEqual" optional="true"/>
+   </requires>
+  -->
+  <requiresVersion match="greaterOrEqual">0.2</requiresVersion>
+  <listens>
+  	<event name="postGetContent" type="synch" priority="7" />
+  	<event name="postGetExcerpt" type="synch" priority="7" />
+  	<event name="pageGetContent" type="synch" priority="7" />
+  	<event name="pageGetExcerpt" type="synch" priority="7" />
+  	<event name="commentGetContent" type="synch" priority="7" />
+	<event name="beforeHtmlHeadEnd" type="synch" priority="5" />
+  </listens>
+</plugin>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin id="ilemoned_greenery" name="Greenery" version="1.1" provider-name="AsFusion" lastModified="2007-09-08">
+	<description>A green, fresh and bright theme based on Greenery by iLEMONed</description>
+	<url></url>
+	<author>AsFusion</author>
+	<authorUrl>http://www.asfusion.com</authorUrl>
+	<designAuthor>iLEMONed</designAuthor>
+	<designAuthorUrl>http://www.ilemoned.com/</designAuthorUrl>
+	<thumbnail>assets/images/skin_thumbnail.png</thumbnail>
+	<preview></preview>
+	<requiresVersion match="greaterOrEqual">0.2</requiresVersion>
+	<adminEditorCss>assets/styles/adminEditor.css</adminEditorCss>
+	<license>Creative Commons Attribution-NonCommercial-ShareAlike 2.5 China Mainland</license>
+	<pageTemplates></pageTemplates>
+</skin>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin id="glossyblue" name="GlossyBlue" version="1.1" provider-name="AsFusion" lastModified="2007-12-04">
+	<description>Design based on GlossyBlue by N.Design Studio design. </description>
+	<url></url>
+	<author>AsFusion</author>
+	<authorUrl>http://www.asfusion.com</authorUrl>
+	<designAuthor>N.Design Studio</designAuthor>
+	<designAuthorUrl>http://www.ndesign-studio.com/</designAuthorUrl>
+	<thumbnail>assets/images/skin_thumbnail.png</thumbnail>
+	<preview></preview>
+	<requiresVersion match="greaterOrEqual">0.2.4.1</requiresVersion>
+	<adminEditorCss>assets/styles/adminEditor.css</adminEditorCss>
+	<license>Creative Commons Attribution v2.5</license>
+	<pageTemplates></pageTemplates>
+</skin>

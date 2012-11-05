@@ -1,0 +1,25 @@
+<cfif NOT structkeyexists(request,"pageTemplate")>
+	<cfset request.pageTemplate = "page.cfm" />
+</cfif>
+<!--- check for entry query string --->
+<cfif structkeyexists(request.externalData,"entry")><!--- for individual pages, we only need id/name --->
+	<cfset request.externalData.pageName = listlast(request.externalData.entry,"/") />
+<cfelseif arraylen(request.externalData.raw)>
+	<!--- put variables into the request scope --->
+	<cfset request.externalData.pageName = request.externalData.raw[arraylen(request.externalData.raw)] />
+<cfelse>
+		<!--- unknown post --->
+		<cfset request.externalData.pageName =  "" />
+</cfif>
+
+<cfset template = request.blogManager.getPagesManager().getPageByName(request.externalData.pageName).getTemplate() />
+<cfif len(template)>
+	<cfset request.pageTemplate = template />
+</cfif>
+<cfset blog = request.blogManager.getBlog() />
+
+<!--- broadcast post event --->
+<cfset pluginQueue = request.blogManager.getPluginQueue() />
+<cfset pluginQueue.broadcastEvent(pluginQueue.createEvent("beforePageTemplate",request)) />
+
+<cfcontent reset="true" /><cftry><cfinclude template="#blog.getbasePath()#skins/#blog.getSkin()#/#request.pageTemplate#"><cfcatch type="missinginclude"><cfinclude template="#blog.getbasePath()#skins/#blog.getSkin()#/page.cfm"></cfcatch></cftry>

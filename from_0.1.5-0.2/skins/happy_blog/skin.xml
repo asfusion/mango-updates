@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin id="happy_blog" name="Happy Blog" version="1.3" provider-name="AsFusion" lastModified="2007-09-08">
+	<description></description>
+	<url></url>
+	<author>AsFusion</author>
+	<authorUrl>http://www.asfusion.com</authorUrl>
+	<designAuthor>Luka Cvrk</designAuthor>
+	<designAuthorUrl>http://www.solucija.com</designAuthorUrl>
+	<thumbnail>assets/images/skin_thumbnail.png</thumbnail>
+	<preview></preview>
+	<requiresVersion match="greaterOrEqual">0.2</requiresVersion>
+	<adminEditorCss>assets/styles/adminEditor.css</adminEditorCss>
+	<license></license>
+	<pageTemplates></pageTemplates>
+</skin>

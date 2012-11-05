@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin id="deliciously_blue" name="Deliciously Blue" version="1.2" provider-name="AsFusion" lastModified="2007-09-08">
+	<description>Design based on Deliciously Blue by j david macor</description>
+	<url></url>
+	<author>AsFusion</author>
+	<authorUrl>http://www.asfusion.com</authorUrl>
+	<designAuthor>j david macor</designAuthor>
+	<designAuthorUrl>http://www.jdavidmacor.com</designAuthorUrl>
+	<thumbnail>assets/images/skin_thumbnail.png</thumbnail>
+	<adminEditorCss>assets/styles/adminEditor.css</adminEditorCss>
+	<requiresVersion>0.2</requiresVersion>
+	<license></license>
+	<pageTemplates></pageTemplates>
+</skin>

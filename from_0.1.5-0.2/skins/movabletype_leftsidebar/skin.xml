@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin id="movableType_leftsidebar" name="Movable Type" version="1.2" provider-name="AsFusion" lastModified="2007-09-08">
+	<description>An implementation of the general Movable Type template. 
+	Styles sheets can be exchanged to any MT style sheet and they should work without modification. Default is 'Magic Paper'</description>
+	<url></url>
+	<author>AsFusion</author>
+	<authorUrl>http://www.asfusion.com</authorUrl>
+	<designAuthor>sixapart</designAuthor>
+	<designAuthorUrl>http://sixapart.com/</designAuthorUrl>
+	<thumbnail>assets/skin_thumbnail.png</thumbnail>
+	<preview></preview>
+	<requiresVersion match="greaterOrEqual">0.2</requiresVersion>
+	<adminEditorCss>assets/styles/adminEditor.css</adminEditorCss>
+	<license></license>
+	<pageTemplates><template file="oneColumnPage.cfm" name="No sidebar page" /></pageTemplates>
+</skin>
