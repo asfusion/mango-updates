@@ -4,7 +4,7 @@
 <cfparam name="attributes.title" default="false">
 <cfparam name="attributes.body" default="false">
 <cfparam name="attributes.date" default="false">
-<cfparam name="attributes.dateformat" default="mm/dd/yyyy">
+<cfparam name="attributes.dateformat" default="medium">
 <cfparam name="attributes.datemodified" default="false">
 <cfparam name="attributes.timemodified" default="false">
 <cfparam name="attributes.time" default="false">
@@ -106,7 +106,7 @@
 	</cfif>
 			
 	<cfif attributes.time>
-		<cfset prop = timeformat(currentPost.getPostedOn(),attributes.timeformat) />	
+		<cfset prop = lstimeformat(currentPost.getPostedOn(),attributes.timeformat) />	
 	</cfif>
 		
 	<cfif attributes.datemodified>

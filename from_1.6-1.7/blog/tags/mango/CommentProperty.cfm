@@ -6,7 +6,7 @@
 <cfparam name="attributes.parent" default="false">
 <cfparam name="attributes.content" default="false">
 <cfparam name="attributes.date" default="false">
-<cfparam name="attributes.dateformat" default="mm/dd/yyyy">
+<cfparam name="attributes.dateformat" default="medium">
 <cfparam name="attributes.time" default="false">
 <cfparam name="attributes.timeformat" default="short">
 <cfparam name="attributes.entryLink" default="false">
@@ -95,9 +95,12 @@ function fullLeft(str, count) {
 	<cfset prop = currentCommentCount />	
 </cfif>
 
-
 <cfif attributes.name>
 	<cfset prop = currentComment.getCreatorName() />
+</cfif>
+
+<cfif attributes.email>
+	<cfset prop = currentComment.getCreatorEmail() />
 </cfif>
 
 <cfif attributes.content>
@@ -118,7 +121,7 @@ function fullLeft(str, count) {
 </cfif>
 
 <cfif attributes.time>
-	<cfset prop = timeformat(currentComment.getCreatedOn(),attributes.timeformat) />	
+	<cfset prop = lstimeformat(currentComment.getCreatedOn(),attributes.timeformat) />	
 </cfif>
 
 <cfif attributes.url>

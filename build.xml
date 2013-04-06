@@ -1,0 +1,13 @@
+<project name="Mango Updates" basedir=".">
+
+  <!-- set global properties for this build -->
+	<property file="project.properties" prefix="settings"/>
+	
+	<!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+	<target name="exportUpdate">
+		<mkdir dir="zips"/>
+		<zip destfile="zips/MangoBlog_update_${settings.currentUpgrade}.zip" basedir="${settings.currentUpgrade}"  />
+			  	
+	</target>
+	
+</project>
