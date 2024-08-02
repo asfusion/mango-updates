@@ -1,7 +1,7 @@
 <cfcomponent name="Mango">
 
 	<cfset variables.blog = "" />
-	<cfset variables.version = "1.7" />
+	<cfset variables.version = "1.7.1" />
 	<cfset variables.pluginQueue = "" />
 	<cfset variables.config = "" />
 	<cfset variables.blogId = "default" />
@@ -229,7 +229,7 @@
 		<cfreturn variables.searcher />
 	</cffunction>
 
-	<cffunction name="getDataAccessFactory" access="package" output="false" returntype="any">		
+	<cffunction name="getDataAccessFactory" access="public" output="false" returntype="any">
 		<cfreturn variables.dataAccessFactory />
 	</cffunction>
 
@@ -360,7 +360,7 @@
 		<cfset arguments.data = replacenocase(arguments.data,"{baseDirectory}",variables.settings["baseDirectory"]) />
 		<cfreturn replacenocase(arguments.data,"{componentsDirectory}",getDirectoryFromPath(GetCurrentTemplatePath())) />
 	</cffunction>
-	
+
 	<cfscript>
 /**
  * Blends all nested structs, arrays, and variables in a struct to another.

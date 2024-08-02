@@ -51,25 +51,35 @@
 				<cfif NOT structKeyExists( variables.editors, 'ckeditor' )>
 					<cfsavecontent variable="local.data">
 	<cfoutput>
-	<script src="assets/editors/ckeditor/ckeditor.js"></script>
+		<script src="assets/editors/ckeditor/ckeditor.js"></script>
 		<script type="text/javascript">
-			$(function() {
+		$(function() {
+			ClassicEditor.create(document.querySelector('.htmlEditor'))
+			.then( editor => {
+				window.editor = editor;
+			<cfif len(local.skin.adminEditorCss)>
+					editor.config.contentsCss = ['#local.basePath#skins/#local.blog.getSkin()#/#local.skin.adminEditorCss#'];
+			</cfif>
+			} )
+				.catch(error => {
+					console.error('There was a problem initializing the editor.', error);
+				});
+		});
+
+			/*$(function() {
 				CKEDITOR.replaceAll( function(textarea,config) {
 					if (textarea.className.indexOf( "htmlEditor") < 0 ) return false;
 					config.stylesSet = [];
 					config.extraPlugins = 'stylesheetparser';
-					<cfif len( local.skin.adminEditorCss )>
-					config.contentsCss = '#local.basePath#skins/#local.blog.getSkin()#/#local.skin.adminEditorCss#';
-					</cfif>
+
 					config.filebrowserBrowseUrl= '#local.blog.getSetting('urls').admin#assets/editors/ckeditor/plugins/asffileexplorer/fileexplorer.cfm';
-	 				config.baseHref = "#local.fileUrl#";
 					config.filebrowserWindowWidth = '640';
 	 				config.filebrowserWindowHeight = '480';
 					config.image_previewText = ' ';
 					#getSetting('customConfig')#
 				});
 			}
-		);
+		);*/
 		</script>
 	</cfoutput>
 				</cfsavecontent>
@@ -79,11 +89,12 @@
 			
 			<cfelseif local.currentEditor EQ "tinymce">
 				<cfif NOT structKeyExists( variables.editors, 'tinymce' )>
-					
 					<cfsavecontent variable="local.data">
 	<cfoutput>
-		<script type="text/javascript" src="assets/editors/tinymce_3/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript">
+		<script type="text/javascript" src="assets/editors/tinymce/tinymce.min.js"></script>
+
+		<script type="text/javascript">
+<!---
 	tinyMCE.init({
 		mode : "specific_textareas",
 		editor_selector : "htmlEditor",
@@ -109,7 +120,7 @@
 		</cfif>
 		#getSetting('customConfig')#
 		plugin_asffileexplorer_browseurl : '#local.blog.getSetting('urls').admin#assets/editors/tinymce_3/jscripts/tiny_mce/plugins/asffileexplorer/fileexplorer.cfm',
-		plugin_asffileexplorer_assetsUrl:'#local.fileUrl#', 
+		plugin_asffileexplorer_assetsUrl:'#local.fileUrl#',
 		file_browser_callback : 'ASFFileExplorerPlugin_browse'
 		,
 		onchange_callback: function(editor) {
@@ -117,7 +128,23 @@
 			$("##" + editor.id).valid();
 		}
 	});
-</script>
+--->
+tinymce.init({
+selector: '.htmlEditor',
+            plugins: [ 'table', 'filemanager' ],
+            toolbar: 'filemanager undo redo | a11ycheck casechange blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify |' +
+            'bullist numlist checklist outdent indent | removeformat | code table help',
+			external_plugins: { "filemanager" : "plugins/filemanager/plugin.min.js"},
+
+			fileManager_path : "assets/editors/tinymce/plugins/FileManager/files.cfm",
+
+	setup: function (editor) {
+		editor.on('change', function () {
+			tinymce.triggerSave();
+		});
+	}
+      });
+      </script>
 	</cfoutput>
 					</cfsavecontent>
 				<cfelse>

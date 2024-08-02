@@ -113,7 +113,7 @@
 		<cfargument name="allowComments" type="boolean" required="false" default="true" hint="" />
 		<cfargument name="postedOn" type="string" required="false" default="#now()#" hint="" />
 		<cfargument name="user" required="false" type="any">
-		<cfargument name="customFields" required="false" type="struct">
+		<cfargument name="customFields" required="false" type="array">
 		<cfargument name="rawData" default="#structnew()#" required="false" type="any">
 		<cfargument name="name" type="string" required="false" />
 		<cfargument name="categories" type="array" required="false" default="#arraynew(1)#" />
@@ -167,7 +167,7 @@
 			
 			<cfset post.setCategories(categoryItems) />
 		
-		<cfset result = postsManager.addPost(post, arguments.rawData) />
+		<cfset result = postsManager.addPost(post, arguments.rawData, arguments.user ) />
 			
 		<cfreturn result />
 	</cffunction>
@@ -435,7 +435,6 @@
 <!--- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --->
 	<cffunction name="editAuthor" access="public" output="false" returntype="struct">		
 		<cfargument name="id" type="string" required="true" />
-		<cfargument name="username" type="string" required="true" />
 		<cfargument name="password" type="string" required="true" />
 		<cfargument name="name" type="string" required="true"  />
 		<cfargument name="email" type="string" required="true" />
@@ -570,7 +569,7 @@
 	<cffunction name="newCategory" access="public" output="false" returntype="any">
 		<cfargument name="title" type="string" required="true" />
 		<cfargument name="description" type="string" required="false" default="" />
-		<cfargument name="user" required="false" type="any">
+		<cfargument name="user" required="false" type="any" default="{}}">
 
 			<cfset var category = variables.blogManager.getObjectFactory().createCategory() />
 			<cfset var result = "" />
@@ -579,7 +578,7 @@
 				<cfset category.setdescription(arguments.description) />
 				<cfset category.setBlogId(variables.blogManager.getBlog().getId()) />
 
-				<cfset result =  variables.blogManager.getCategoriesManager().addCategory(category,structnew()) />
+				<cfset result =  variables.blogManager.getCategoriesManager().addCategory(category,structnew(), arguments.user ) />
 		
 		<cfreturn result />
 	</cffunction>
@@ -866,28 +865,9 @@
 		<cfdirectory name="dirs" directory="#dir#" action="list">
 		
 		<cfoutput query="dirs">
-			<cfset skinxmlfile = directory & "/" & name & "/skin.xml"/>
-			<cfif fileexists(skinxmlfile)>
-				<cffile action="read" file="#skinxmlfile#" variable="skindata">
-				<cfset skindata = xmlparse(skindata).skin />
-				<cfset skin = structnew() />
-				<cfset skin.name = skindata.xmlAttributes.name />
-				<cfset skin.id = skindata.xmlAttributes.id />
-				<cfset skin.lastModified = skindata.xmlAttributes.lastModified />
-				<cfset skin.version = skindata.xmlAttributes.version />
-				<cfset skin.description = skindata.description.xmltext />
-				<cfset skin.thumbnail = skindata.thumbnail.xmltext />
-				<cfset skin.author = skindata.author.xmltext />
-				<cfset skin.authorUrl = skindata.authorUrl.xmltext />
-				<cfset skin.designAuthor = skindata.designAuthor.xmltext />
-				<cfset skin.designAuthorUrl = skindata.designAuthorUrl.xmltext />
-				<cfif structkeyexists(skindata,"requiresVersion")>
-					<cfset skin.requiresVersion = skindata.requiresVersion.xmltext />
-				<cfelse><cfset skin.requiresVersion = ""></cfif>
-				<cfif structkeyexists(skindata,"license")>
-					<cfset skin.license = skindata.license.xmltext />
-				<cfelse><cfset skin.license = ""></cfif>
-				<cfset arrayappend(skins,skin) />
+			<cfset var newSkin = getSkin( name ) />
+			<cfif isStruct( newSkin )>
+				<cfset arrayappend(skins, newSkin ) />
 			</cfif>
 		</cfoutput>
 		<cfreturn skins />
@@ -915,75 +895,23 @@
 <!--- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --->
 	<cffunction name="getSkin" access="public" output="false" returntype="any">
 		<cfargument name="id" type="String" required="true" />
-			<cfset var skin = "" />
 			<cfset var skindata = "" />
-			<cfset var skinxmlfile = "" />
 			<cfset var dir = getSkinDirectory() />
-			<cfset var i = 0 />
-			<cfset var j = 0 />
-			<cfset var pagetemplate = "" />
-			<cfset var podLocation = "" />
-			<cfset var pods = "" />
-			<cfset var pod = "" />
-			
-			<cfset skinxmlfile = dir & "/" & arguments.id & "/skin.xml"/>
-				<cffile action="read" file="#skinxmlfile#" variable="skindata">
-				<cfset skindata = xmlparse(skindata).skin />
-				<cfset skin = structnew() />
-				<cfset skin.name = skindata.xmlAttributes.name />
-				<cfset skin.id = skindata.xmlAttributes.id />
-				<cfset skin.lastModified = skindata.xmlAttributes.lastModified />
-				<cfset skin.version = skindata.xmlAttributes.version />
-				<cfset skin.description = skindata.description.xmltext />
-				<cfset skin.thumbnail = skindata.thumbnail.xmltext />
-				<cfset skin.adminEditorCss = skindata.adminEditorCss.xmltext />
-				<cfset skin.license = skindata.license.xmltext />
-				<cfset skin.pageTemplates = arraynew(1) />
-				
-				<cfloop from="1" to="#arraylen(skindata.pageTemplates.xmlchildren)#" index="i">
-					<cfset pagetemplate = structnew() />
-					<cfset pagetemplate.file = skindata.pageTemplates.xmlchildren[i].xmlattributes.file />
-					<cfset pagetemplate.name = skindata.pageTemplates.xmlchildren[i].xmlattributes.name />
-					<cfif fileexists("#dir#/#arguments.id#/#pagetemplate.file#")>
-						<cfset skin.pageTemplates[i] = pagetemplate />
-					</cfif>
-				</cfloop>
-				
-				<cfset skin.adminPageTemplates = structnew() />
-				
-				<cfif structkeyexists(skindata,"adminPageTemplates")>
-					<cfloop from="1" to="#arraylen(skindata.adminPageTemplates.xmlchildren)#" index="i">
-						<cfset pagetemplate = structnew() />
-						<cfset pagetemplate.file = skindata.adminPageTemplates.xmlchildren[i].xmlattributes.file />
-						<cfset pagetemplate.id = skindata.adminPageTemplates.xmlchildren[i].xmlattributes.id />
-						<cfif fileexists("#dir#/#arguments.id#/#pagetemplate.file#")>
-							<cfset skin.adminPageTemplates[pagetemplate.id] = pagetemplate />
-						</cfif>
-					</cfloop>
-				</cfif>
-				
-				<cfset skin.podLocations = arraynew(1) />
-				
-				<cfif structkeyexists(skindata,"podLocations")>
-					<cfloop from="1" to="#arraylen(skindata.podLocations.xmlchildren)#" index="i">
-						<cfset podLocation = structnew() />
-						<cfset podLocation.id = skindata.podLocations.xmlchildren[i].xmlattributes.id />
-						<cfset podLocation.name = skindata.podLocations.xmlchildren[i].xmlattributes.name />
-						<cfset pods = arraynew(1) />
-						
-						<cfloop from="1" to="#arraylen(skindata.podLocations.xmlchildren[i].xmlchildren)#" index="j">
-							<cfset pod = structnew() />
-							<cfset pod.id = skindata.podLocations.xmlchildren[i].xmlchildren[j].xmlattributes.id />
-							<cfset pod.title = skindata.podLocations.xmlchildren[i].xmlchildren[j].xmltext />
-							<cfset arrayappend(pods,pod) />
-						</cfloop>
+			<cfset var file = dir & "/" & arguments.id & "/skin.json" />
 
-						<cfset podLocation.pods = pods />
-						<cfset skin.podLocations[i] = podLocation />
-					</cfloop>
+			<!--- try json modern version first --->
+			<cfset file = dir & "/" & arguments.id & "/skin.json"/>
+			<cfif fileExists( file )>
+				<cffile action="read" file="#file#" variable="skindata">
+				<cfset skindata = deserializeJSON( skindata ) />
+			<cfelse>
+				<cfset file = dir & "/" & arguments.id & "/skin.xml"/>
+				<cfif fileExists( file )>
+					<cfset skindata = parseXmlSkin( file )>
 				</cfif>
-				
-		<cfreturn skin />
+			</cfif>
+
+		<cfreturn skindata />
 	</cffunction>
 
 <!--- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --->
@@ -1303,10 +1231,13 @@
 <!--- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --->
 	<cffunction name="getAdminPageTemplates" access="public" output="false" returntype="struct">
 
-			<cfset var templates = "" />
+			<cfset var templates = {} />
 			<cfset var id = variables.blogManager.getBlog().getSkin() />
-			<cfset templates = getSkin(id).adminPageTemplates />
-			
+			<cfset skin = getSkin( variables.blogManager.getBlog().getSkin() ) />
+			<cfif structKeyExists( skin, 'adminPageTemplates' )>
+				<cfset templates = getSkin(id).adminPageTemplates />
+			</cfif>
+
 		<cfreturn templates />
 	</cffunction>
 
@@ -1397,7 +1328,84 @@
 		</cfoutput>
 		
 	</cffunction>
-	
+
+
+<!--- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --->
+	<cffunction name="parseXmlSkin" access="public" output="false" returntype="any">
+		<cfargument name="xmlFile" type="String" required="true" />
+		<cfset var skin = "" />
+		<cfset var skindata = "" />
+		<cfset var i = 0 />
+		<cfset var j = 0 />
+		<cfset var pagetemplate = "" />
+		<cfset var podLocation = "" />
+		<cfset var pods = "" />
+		<cfset var pod = "" />
+		<cfset var dir = getSkinDirectory() />
+
+		<cffile action="read" file="#xmlFile#" variable="skindata">
+		<cfset skindata = xmlparse(skindata).skin />
+		<cfset skin = structnew() />
+		<cfset skin.name = skindata.xmlAttributes.name />
+		<cfset skin.id = skindata.xmlAttributes.id />
+		<cfset skin.lastModified = skindata.xmlAttributes.lastModified />
+		<cfset skin.version = skindata.xmlAttributes.version />
+		<cfset skin.description = skindata.description.xmltext />
+		<cfset skin.thumbnail = skindata.thumbnail.xmltext />
+		<cfset skin.adminEditorCss = skindata.adminEditorCss.xmltext />
+		<cfset skin.license = skindata.license.xmltext />
+		<cfset skin.author = skindata.author.xmltext />
+		<cfset skin.authorUrl = skindata.authorUrl.xmltext />
+		<cfset skin.designAuthor = skindata.designAuthor.xmltext />
+		<cfset skin.designAuthorUrl = skindata.designAuthorUrl.xmltext />
+
+		<cfset skin.pageTemplates = arraynew(1) />
+
+		<cfloop from="1" to="#arraylen(skindata.pageTemplates.xmlchildren)#" index="i">
+			<cfset pagetemplate = structnew() />
+			<cfset pagetemplate.file = skindata.pageTemplates.xmlchildren[i].xmlattributes.file />
+			<cfset pagetemplate.name = skindata.pageTemplates.xmlchildren[i].xmlattributes.name />
+			<cfif fileexists("#dir#/#skin.id#/#pagetemplate.file#")>
+				<cfset skin.pageTemplates[i] = pagetemplate />
+			</cfif>
+		</cfloop>
+
+		<cfset skin.adminPageTemplates = structnew() />
+
+		<cfif structkeyexists(skindata,"adminPageTemplates")>
+			<cfloop from="1" to="#arraylen(skindata.adminPageTemplates.xmlchildren)#" index="i">
+				<cfset pagetemplate = structnew() />
+				<cfset pagetemplate.file = skindata.adminPageTemplates.xmlchildren[i].xmlattributes.file />
+				<cfset pagetemplate.id = skindata.adminPageTemplates.xmlchildren[i].xmlattributes.id />
+				<cfif fileexists("#dir#/#skin.id#/#pagetemplate.file#")>
+					<cfset skin.adminPageTemplates[pagetemplate.id] = pagetemplate />
+				</cfif>
+			</cfloop>
+		</cfif>
+
+		<cfset skin.podLocations = arraynew(1) />
+
+		<cfif structkeyexists(skindata,"podLocations")>
+			<cfloop from="1" to="#arraylen(skindata.podLocations.xmlchildren)#" index="i">
+				<cfset podLocation = structnew() />
+				<cfset podLocation.id = skindata.podLocations.xmlchildren[i].xmlattributes.id />
+				<cfset podLocation.name = skindata.podLocations.xmlchildren[i].xmlattributes.name />
+				<cfset pods = arraynew(1) />
+
+				<cfloop from="1" to="#arraylen(skindata.podLocations.xmlchildren[i].xmlchildren)#" index="j">
+					<cfset pod = structnew() />
+					<cfset pod.id = skindata.podLocations.xmlchildren[i].xmlchildren[j].xmlattributes.id />
+					<cfset pod.title = skindata.podLocations.xmlchildren[i].xmlchildren[j].xmltext />
+					<cfset arrayappend(pods,pod) />
+				</cfloop>
+
+				<cfset podLocation.pods = pods />
+				<cfset skin.podLocations[i] = podLocation />
+			</cfloop>
+		</cfif>
+
+		<cfreturn skin />
+	</cffunction>
 
 	<cfscript>
 /**

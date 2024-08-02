@@ -16,9 +16,11 @@
 		<cfelseif dbtype EQ "mysql">
 			<cfset local.queryString = "ALTER TABLE `#variables.tablePrefix#setting` ADD `type` VARCHAR(10)  NULL  DEFAULT 'string'" />
 		</cfif>
+		<cfset local.queryResult = variables.queryInterface.makeQuery(local.queryString,0,false) />
 
-		<cfset local.queryResult = variables.queryInterface.makeQuery(local.queryString,0,true) />
-		
+		<cfset local.queryResult = variables.queryInterface.makeQuery(
+		"select path from #variables.tablePrefix#setting where path = 'system/admin/htmleditor' and name = 'editor' and blog_id = '#variables.blogId#'",0) />
+
 		<cfif NOT local.queryResult.recordcount>
 			<!--- setting does not already exist --->
 			<cfset local.queryStringInsert = "INSERT INTO #variables.tablePrefix#setting(path, name, value, blog_id)
@@ -40,17 +42,11 @@
 <cfset local.queryString = "CREATE TABLE `#variables.tablePrefix#login_password_reset` (
 		`id` varchar(40) NOT NULL DEFAULT '',
 		`user_id` varchar(40) DEFAULT NULL,
-		`valid` tinyint DEFAULT NULL,an
+		`valid` tinyint DEFAULT NULL,
 		`created_on` datetime DEFAULT NULL,
 		PRIMARY KEY (`id`)
 		)">
 
 		<cfset local.queryResult = variables.queryInterface.makeQuery(local.queryString,0,true) />
-
-		
 	</cffunction>
-
-
-
-
 </cfcomponent>

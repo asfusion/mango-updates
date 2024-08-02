@@ -6,7 +6,7 @@
 	<!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 	<target name="exportUpdate">
 		<mkdir dir="zips"/>
-		<zip destfile="zips/MangoBlog_update_${settings.currentUpgrade}.zip" basedir="${settings.currentUpgrade}"  />
+		<zip destfile="zips/Mango_update_${settings.currentUpgrade}.zip" basedir="${settings.currentUpgrade}"  />
 			  	
 	</target>
 	

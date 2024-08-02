@@ -15,10 +15,8 @@
 
 				--------- done <br />
 
-		
-
-					<cfif NOT structkeyexists(local,"manual")>
-						<!--- delete: admin css files -->
+				<cfif NOT structkeyexists(local,"manual")>
+					<!--- delete: admin css files --->
 
 					<!--- :::::::::::::::::::::: --->
 					- Copying base files... 
@@ -50,7 +48,7 @@
 					all sub-folders and try again. 
 					<br />
 					If you still have problems, you can move the files manually. Download the zip file from: 
-					<a href="https://bitbucket.org/asfusion/mango-updates/downloads/MangoBlog_update_from_1.7-1.7.1.zip">https://bitbucket.org/asfusion/mango-updates/downloads/MangoBlog_update_from_1.7-1.7.1.zip</a>
+					<a href="https://www.mangoblog.org/downloads/Mango_update_from_1.7-1.7.1.zip">https://www.mangoblog.org/downloads/Mango_update_from_1.7-1.7.1.zip</a>
 					and then copy only the files, not full directories:
 					<ul><li>
 					Files in folder blog need to go to your blog root
@@ -58,7 +56,7 @@
 					<li>Files in components need to go to your blog root/components folder</li>
 					<li>Delete the "helpers" folder and other files not in the above folders</li>
 					</ul>
-					<cfthrow message="Error" />
+					<cfthrow message="#cfcatch.message#" />
 				</cfcatch>
 				</cftry>
 	</cfoutput>
